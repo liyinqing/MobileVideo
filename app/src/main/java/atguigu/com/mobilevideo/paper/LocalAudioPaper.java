@@ -19,6 +19,6 @@ public class LocalAudioPaper extends BaseFragment {
     @Override
     public void initData() {
         super.initData();
-        tv.setText("本地音乐");
+        tv.setText("本地视频");
     }
 }
