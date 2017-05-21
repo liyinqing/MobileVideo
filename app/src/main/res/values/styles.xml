@@ -7,5 +7,20 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-
+    <!--android:drawablePadding="3dp"-->
+    <!--android:textColor="@drawable/rb_local_video_textcolor"-->
+    <!--android:gravity="center"-->
+    <!--android:layout_weight="1"-->
+    <!--android:button="@null"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <style name="butoom">
+        <item name="android:drawablePadding">3dp</item>
+        <item name="android:textColor">@drawable/rb_local_video_textcolor</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:button">@null</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 </resources>

@@ -8,4 +8,43 @@
     tools:context="atguigu.com.mobilevideo.MainActivity">
 
     <include layout="@layout/tetle"/>
+    <FrameLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+    <RadioGroup
+        android:id="@+id/rg_main"
+        android:gravity="center_vertical"
+        android:padding="5dp"
+        android:background="#33000000"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioButton
+        android:id="@+id/rb_local_video"
+        android:drawableTop="@drawable/rb_local_video_icon"
+        android:text="本地视频"
+        style="@style/butoom"
+        />
+        <RadioButton
+            android:id="@+id/rb_local_audio"
+            android:drawableTop="@drawable/rb_local_audio_icon"
+            android:text="本地音乐"
+            style="@style/butoom"
+            />
+        <RadioButton
+            android:id="@+id/rb_net_audio"
+            android:drawableTop="@drawable/rb_net_audio_icon"
+            android:text="网络音乐"
+            style="@style/butoom"
+            />
+        <RadioButton
+            android:id="@+id/rb_net_video"
+            android:drawableTop="@drawable/rb_net_video_icon"
+            android:text="网络视频"
+            style="@style/butoom"
+            />
+
+
+    </RadioGroup>
 </LinearLayout>
