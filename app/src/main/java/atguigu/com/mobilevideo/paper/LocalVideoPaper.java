@@ -1,18 +1,21 @@
 package atguigu.com.mobilevideo.paper;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import atguigu.com.mobilevideo.R;
+import atguigu.com.mobilevideo.activity.SystemVideoPlayer;
 import atguigu.com.mobilevideo.adapter.LocalVideoAdapter;
 import atguigu.com.mobilevideo.domain.LocalVideoInfo;
 import atguigu.com.mobilevideo.fargment.BaseFragment;
@@ -20,7 +23,7 @@ import atguigu.com.mobilevideo.fargment.BaseFragment;
 /**
  * 作者：李银庆 on 2017/5/21 12:03
  */
-public class LocalVideoPaper extends BaseFragment {
+public class LocalVideoPaper extends BaseFragment implements AdapterView.OnItemClickListener {
 
     // private TextView tv;
     private TextView tv_content;
@@ -55,6 +58,8 @@ public class LocalVideoPaper extends BaseFragment {
         lv = (ListView) view.findViewById(R.id.lv);
         tv_content = (TextView) view.findViewById(R.id.tv_content);
 
+        //点击lv实现播放
+        lv.setOnItemClickListener(this);
         return view;
     }
 
@@ -96,5 +101,20 @@ public class LocalVideoPaper extends BaseFragment {
                 handler.sendEmptyMessage(POSITION);
             }
         }.start();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+//        //调用系统的播放器
+//        Intent intent = new Intent();
+//        String data= adapter.getItem(position).getData();
+//        intent.setDataAndType(Uri.parse(data),"video/*");
+//        startActivity(intent);
+        //自定义播放器
+        Intent intent = new Intent(context,SystemVideoPlayer.class);
+        String data= adapter.getItem(position).getData();
+        intent.setDataAndType(Uri.parse(data),"video/*");
+        startActivity(intent);
     }
 }
