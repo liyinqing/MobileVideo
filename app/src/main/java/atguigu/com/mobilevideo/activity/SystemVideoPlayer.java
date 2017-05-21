@@ -14,6 +14,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import atguigu.com.mobilevideo.R;
+import atguigu.com.mobilevideo.Utils.Utils;
 
 public class SystemVideoPlayer extends AppCompatActivity implements View.OnClickListener {
 
@@ -35,6 +36,7 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
     private Button btnPost;
     private Button btnNext;
     private Button btnDefaultScreen;
+    private Utils utils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,8 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_system_video_player);
         vv = (VideoView)findViewById(R.id.vv);
         findViews();
+        //初始化工具包
+        utils = new Utils();
         //得到播放视频的地址
         uri = getIntent().getData();
         listener();
@@ -59,6 +63,14 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
         vv.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
+
+                //得到視頻的總時長
+                int duration = vv.getDuration();
+                //seekbar的長度
+                seekVideo.setMax(duration);
+                //設置視頻的總時長，需要工具包裝換
+                tvDuration.setText(utils.stringForTime(duration));
+
                 //开始播放
                 vv.start();
             }
@@ -80,6 +92,36 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
             public void onCompletion(MediaPlayer mp) {
                 Toast.makeText(SystemVideoPlayer.this, "播放完成", Toast.LENGTH_SHORT).show();
                 finish();
+            }
+        });
+
+        seekVideo.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            /**
+             * 用戶拖動的時候回調
+             * @param seekBar
+             * @param progress
+             * @param fromUser 為true 是用戶拖動的
+             */
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(fromUser){
+                    vv.seekTo(progress);
+                }
+            }
+
+            /**
+             *
+             * @param seekBar
+             */
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
     }
