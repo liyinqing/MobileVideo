@@ -3,6 +3,8 @@ package atguigu.com.mobilevideo.activity;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -37,6 +39,22 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
     private Button btnNext;
     private Button btnDefaultScreen;
     private Utils utils;
+    private final int PROGRESS = 1;
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case  PROGRESS:
+                    //找到當前視頻播放進度，設置到seekbar中
+                    int currentPosition = vv.getCurrentPosition();
+                    seekVideo.setProgress(currentPosition);
+                    currentTime.setText(utils.stringForTime(currentPosition));
+                    handler.sendEmptyMessageDelayed(PROGRESS,1000);
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +91,8 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
 
                 //开始播放
                 vv.start();
+                //開始更新播放進度
+                handler.sendEmptyMessage(PROGRESS);
             }
         });
         /**
@@ -203,5 +223,9 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacksAndMessages(null);
+    }
 }
