@@ -13,6 +13,7 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -150,7 +151,6 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
         //初始化工具包
         getData();
         setPlay();
-        //
         listener();
         registePlayer();
 
@@ -158,6 +158,8 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
 
     private void getData() {
         utils = new Utils();
+
+
         detector = new GestureDetector(this,new GestureDetector.SimpleOnGestureListener(){
             @Override
             public boolean onDoubleTap(MotionEvent e) {
@@ -330,7 +332,31 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
 
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
+            currentVoice--;
+            updateVoiceProgress(currentVoice);
+          //  handler.removeMessages(HIDE_MEDIACONTROL);
+          //  handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROL, 5000);
+            return true;
+        }else if(keyCode ==KeyEvent.KEYCODE_VOLUME_UP){
+            currentVoice++;
+            updateVoiceProgress(currentVoice);
+          //  handler.removeMessages(HIDE_MEDIACONTROL);
+          ///  handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROL, 5000);
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+
+
     private void listener() {
+
 
 
 
@@ -512,7 +538,6 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
         //聲音按鈕
         if ( v == btnVoice ) {
             isMute = !isMute;
-
             updateVoice(isMute);
         } else
             //選擇播放視頻按鈕
