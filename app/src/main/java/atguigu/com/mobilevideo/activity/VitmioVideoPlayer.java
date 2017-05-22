@@ -548,7 +548,17 @@ public class VitmioVideoPlayer extends AppCompatActivity implements View.OnClick
         } else
             //選擇播放視頻按鈕
         if ( v == btnSwitch ) {
-
+                new AlertDialog.Builder(this)
+                            .setTitle("提示")
+                            .setMessage("当前是系统播放器，是否要切换万能播放器播放")
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startSystemPlyer();
+                                }
+                            })
+                            .setNegativeButton("取消", null)
+                            .show();
         } else
             //返回退出按鈕
         if ( v == btnExit ) {
@@ -570,6 +580,32 @@ public class VitmioVideoPlayer extends AppCompatActivity implements View.OnClick
         if ( v == btnDefaultScreen ) {
 
         }
+    }
+
+    private void startSystemPlyer() {
+        if(vv != null){
+            vv.stopPlayback();
+        }
+        Intent intent = new Intent(this,SystemVideoPlayer.class);
+
+        if(videoInfos != null && videoInfos.size() >0){
+            //传递视频列表
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("Infos",videoInfos);
+
+            intent.putExtras(bundle);
+
+            //视频的列表中的某条位置
+            intent.putExtra("position",position);
+        }else  if(uri != null){
+            intent.setData(uri);
+        }
+
+
+        startActivity(intent);
+
+        finish();
+
     }
 
     private void setStartOrPause() {
