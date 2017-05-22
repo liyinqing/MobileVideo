@@ -34,6 +34,7 @@ import atguigu.com.mobilevideo.domain.LocalVideoInfo;
 
 public class SystemVideoPlayer extends AppCompatActivity implements View.OnClickListener {
 
+    private static final int SHOW_NET = 3;
     private  final int HIDE_MEDIACONTROLLER =2 ;
     private VideoView vv;
     private Uri uri;
@@ -97,6 +98,11 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
+                case SHOW_NET:
+                    String s = utils.showNetSpeed();
+                    tv_net.setText(s);
+                    sendEmptyMessageDelayed(SHOW_NET,1000);
+                    break;
                 case  PROGRESS:
                     //設置時間
                     tvTime.setText(getSystemTime());
@@ -116,7 +122,7 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
 
                     if(isNetUri){
                         int duration = currentPosition - preCurrentPosition;
-                        if(duration < 800){
+                        if(duration < 500){
                             //ka
                             ll_buffer.setVisibility(View.VISIBLE);
                         }else{
@@ -124,8 +130,6 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
                         }
                         preCurrentPosition = currentPosition;
                     }
-
-
                     sendEmptyMessageDelayed(PROGRESS,1000);
 
                 case HIDE_MEDIACONTROLLER://隐藏控制面板
@@ -135,6 +139,11 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
             }
         }
     };
+
+
+
+
+
 
     private String getSystemTime() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
@@ -157,19 +166,13 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
     }
 
     private void getData() {
-        utils = new Utils();
+        utils = new Utils(this);
 
 
         detector = new GestureDetector(this,new GestureDetector.SimpleOnGestureListener(){
             @Override
             public boolean onDoubleTap(MotionEvent e) {
-//                if (isFullScreen) {
-//                    //默认
-//                    setVideoType(DEFUALT_SCREEN);
-//                } else {
-//                    //全屏
-//                    setVideoType(FULL_SCREEN);
-//                }
+
                 return super.onDoubleTap(e);
             }
 
@@ -353,13 +356,7 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
     }
 
 
-
-
     private void listener() {
-
-
-
-
         //监听拖动声音
         seekVice.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -369,7 +366,6 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
                 }
 
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
 
@@ -513,6 +509,8 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
         seekVice.setMax(maxVoice);
         //设置当前进度
         seekVice.setProgress(currentVoice);
+
+        handler.sendEmptyMessage(SHOW_NET);
     }
 
     /**

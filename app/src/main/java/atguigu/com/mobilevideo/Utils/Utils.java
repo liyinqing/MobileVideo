@@ -1,18 +1,22 @@
 package atguigu.com.mobilevideo.Utils;
 
+import android.content.Context;
+import android.net.TrafficStats;
+
 import java.util.Formatter;
 import java.util.Locale;
 
 public class Utils {
 
+	private final Context context;
 	private StringBuilder mFormatBuilder;
 	private Formatter mFormatter;
 
-	public Utils() {
+	public Utils(Context context) {
 		// ת�����ַ�����ʱ��
 		mFormatBuilder = new StringBuilder();
 		mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
-
+		this.context = context;
 	}
 
 	/**
@@ -52,5 +56,23 @@ public class Utils {
 			}
 		}
 		return isNetUri;
+	}
+
+	private long lastTotalRxBytes = 0;
+	private long lastTimeStamp = 0;
+	public String showNetSpeed() {
+
+		long nowTotalRxBytes = getTotalRxBytes();
+		long nowTimeStamp = System.currentTimeMillis();
+		long speed = ((nowTotalRxBytes - lastTotalRxBytes) * 1000 / (nowTimeStamp - lastTimeStamp));//毫秒转换
+
+		lastTimeStamp = nowTimeStamp;
+		lastTotalRxBytes = nowTotalRxBytes;
+		String msg  = String.valueOf(speed) + " kb/s";
+		return msg;
+
+	}
+	private long getTotalRxBytes() {
+		return TrafficStats.getUidRxBytes( context.getApplicationInfo().uid)==TrafficStats.UNSUPPORTED ? 0 :(TrafficStats.getTotalRxBytes()/1024);//转为KB
 	}
 }
