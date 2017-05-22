@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -113,8 +114,13 @@ public class LocalVideoPaper extends BaseFragment implements AdapterView.OnItemC
 //        startActivity(intent);
         //自定义播放器
         Intent intent = new Intent(context,SystemVideoPlayer.class);
-        String data= adapter.getItem(position).getData();
-        intent.setDataAndType(Uri.parse(data),"video/*");
+//        String data= adapter.getItem(position).getData();
+//        intent.setDataAndType(Uri.parse(data),"video/*");
+       // LocalVideoInfo item = adapter.getItem(position);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("Infos", lists);
+        intent.putExtras(bundle);
+        intent.putExtra("position",position);
         startActivity(intent);
     }
 }

@@ -1,9 +1,11 @@
 package atguigu.com.mobilevideo.domain;
 
+import java.io.Serializable;
+
 /**
  * 作者：李银庆 on 2017/5/21 14:29
  */
-public class LocalVideoInfo {
+public class LocalVideoInfo implements Serializable {
     private String name;
     private long duration;
     private long size;

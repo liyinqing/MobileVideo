@@ -7,7 +7,7 @@
     android:background="#000000"
     tools:context="atguigu.com.mobilevideo.activity.SystemVideoPlayer">
 
-    <atguigu.com.mobilevideo.view.VideoView
+    <atguigu.com.mobilevideo.view.VitmioVideoView
         android:id="@+id/vv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

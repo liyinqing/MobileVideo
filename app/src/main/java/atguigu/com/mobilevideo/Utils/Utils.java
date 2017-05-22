@@ -37,4 +37,20 @@ public class Utils {
 		}
 	}
 
+
+	/**
+	 * 是否是网络资源
+	 * @param data
+	 * @return
+	 */
+	public boolean isNetUri(String data) {
+		boolean isNetUri = false;
+		if (data != null) {
+			if (data.toLowerCase().startsWith("http") || data.toLowerCase().startsWith("mms") || data.toLowerCase().startsWith("rtsp")) {
+				//网络资源
+				isNetUri = true;
+			}
+		}
+		return isNetUri;
+	}
 }

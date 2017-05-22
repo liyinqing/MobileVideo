@@ -4,16 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,10 +24,12 @@ import java.util.Date;
 import atguigu.com.mobilevideo.R;
 import atguigu.com.mobilevideo.Utils.Utils;
 import atguigu.com.mobilevideo.domain.LocalVideoInfo;
+import io.vov.vitamio.MediaPlayer;
+import io.vov.vitamio.Vitamio;
+import io.vov.vitamio.widget.VideoView;
 
-public class SystemVideoPlayer extends AppCompatActivity implements View.OnClickListener {
+public class VitamioVideoPlayer extends AppCompatActivity implements View.OnClickListener {
 
-    private  final int HIDE_MEDIACONTROLLER =2 ;
     private VideoView vv;
     private Uri uri;
     private LinearLayout llTop;
@@ -58,8 +54,6 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
     //点击某条传过来的位置
     private int position;
 
-    private GestureDetector detector;
-
     private boolean isNetUri;
 
     //之前进度
@@ -70,27 +64,6 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
     //視頻集合
     private ArrayList<LocalVideoInfo> videoInfos;
 
-    AudioManager am ;
-    //当前的音量：0~15之间
-    private int currentVoice;
-    //最大音量
-    private int maxVoice;
-    //是否静音
-    private boolean isMute = false;
-
-    /**
-     * 屏幕的高
-     */
-    private int screenHeight;
-    private int screenWidth;
-    //视频的原生的宽和高
-    private int videoWidth;
-    private int videoHeight;
-    /**
-     * 是否显示控制面板
-     */
-    private boolean isShowMediaController = false;
-
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -100,7 +73,7 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
                     //設置時間
                     tvTime.setText(getSystemTime());
                     //找到當前視頻播放進度，設置到seekbar中
-                    int currentPosition = vv.getCurrentPosition();
+                    int currentPosition = (int) vv.getCurrentPosition();
                     seekVideo.setProgress(currentPosition);
                     currentTime.setText(utils.stringForTime(currentPosition));
                     //设置视频缓存效果
@@ -115,7 +88,7 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
 
                     if(isNetUri){
                         int duration = currentPosition - preCurrentPosition;
-                        if(duration < 800){
+                        if(duration < 500){
                             //ka
                             ll_buffer.setVisibility(View.VISIBLE);
                         }else{
@@ -125,12 +98,8 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
                     }
 
 
-                    sendEmptyMessageDelayed(PROGRESS,1000);
-
-                case HIDE_MEDIACONTROLLER://隐藏控制面板
-                    //hideMediaController();
+                    handler.sendEmptyMessageDelayed(PROGRESS,1000);
                     break;
-
             }
         }
     };
@@ -144,11 +113,12 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_system_video_player);
+        Vitamio.isInitialized(getApplicationContext());
+        setContentView(R.layout.activity_vitamio_video_player);
         vv = (VideoView)findViewById(R.id.vv);
         findViews();
         //初始化工具包
-        getData();
+        utils = new Utils();
         setPlay();
         //
         listener();
@@ -156,59 +126,6 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
 
     }
 
-    private void getData() {
-        utils = new Utils();
-        detector = new GestureDetector(this,new GestureDetector.SimpleOnGestureListener(){
-            @Override
-            public boolean onDoubleTap(MotionEvent e) {
-//                if (isFullScreen) {
-//                    //默认
-//                    setVideoType(DEFUALT_SCREEN);
-//                } else {
-//                    //全屏
-//                    setVideoType(FULL_SCREEN);
-//                }
-                return super.onDoubleTap(e);
-            }
-
-            @Override
-            public boolean onSingleTapConfirmed(MotionEvent e) {
-                Toast.makeText(SystemVideoPlayer.this, "單機", Toast.LENGTH_SHORT).show();
-                if (isShowMediaController) {
-                    showMediaController();
-
-                   // handler.removeMessages(HIDE_MEDIACONTROLLER);
-                } else {
-                    hideMediaController();
-                   // handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER, 4000);
-                }
-                return super.onSingleTapConfirmed(e);
-            }
-
-            @Override
-            public void onLongPress(MotionEvent e) {
-
-                Toast.makeText(SystemVideoPlayer.this, "长按了", Toast.LENGTH_SHORT).show();
-                setStartOrPause();
-                super.onLongPress(e);
-            }
-        });
-
-
-    }
-    /**
-     * 隐藏控制面板
-     */
-    private void hideMediaController() {
-        llBottom.setVisibility(View.INVISIBLE);
-        llTop.setVisibility(View.GONE);
-        isShowMediaController = true;
-    }
-    public void showMediaController() {
-        llBottom.setVisibility(View.VISIBLE);
-        llTop.setVisibility(View.VISIBLE);
-        isShowMediaController = false;
-    }
     private void setPlay() {
 
         //得到播放视频的地址
@@ -219,7 +136,6 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
         if(videoInfos != null){
             String data = videoInfos.get(position).getData();
            // vv.setVideoURI(Uri.parse(data));
-            tvName.setText(videoInfos.get(position).getName());
             vv.setVideoPath(data);
         }
 
@@ -271,91 +187,7 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
         }
     }
 }
-    //记录坐标
-    private float dowY;
-    //滑动的初始声音
-    private int mVol;
-    //滑动的最大区域
-    private float touchRang;
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        detector.onTouchEvent(event);
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        //1.记录相关参数
-                        dowY = event.getY();
-                        mVol = am.getStreamVolume(AudioManager.STREAM_MUSIC);
-                        touchRang = Math.min(screenHeight,screenWidth);//screenHeight
-                       // handler.removeMessages(HIDE_MEDIACONTROLLER);
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        //2.滑动的时候来到新的位置
-                        float endY = event.getY();
-                        //3.计算滑动的距离
-                        float distanceY = dowY - endY;
-                        //原理：在屏幕滑动的距离： 滑动的总距离 = 要改变的声音： 最大声音
-                        //要改变的声音 = （在屏幕滑动的距离/ 滑动的总距离）*最大声音;
-                        float delta = (distanceY/touchRang)*maxVoice;
-
-
-                        if(delta != 0){
-                            //最终声音 = 原来的+ 要改变的声音
-                            int mVoice = (int) Math.min(Math.max(mVol+delta,0),maxVoice);
-                            //0~15
-                            updateVoiceProgress(mVoice);
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                       // handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER,4000);
-                        break;
-        }
-        return super.onTouchEvent(event);
-    }
-
-    /**
-     * 设置滑动改变声音
-     * @param progress
-     */
-    private void updateVoiceProgress(int progress) {
-        currentVoice = progress;
-        //真正改变声音
-        am.setStreamVolume(AudioManager.STREAM_MUSIC,currentVoice,0);
-        //改变进度条
-        seekVice.setProgress(currentVoice);
-        if(currentVoice <=0){
-            isMute = true;
-        }else {
-            isMute = false;
-        }
-
-    }
-
     private void listener() {
-
-
-
-        //监听拖动声音
-        seekVice.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(fromUser){
-                    updateVoiceProgress(progress);
-                }
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-
         //设置播放器的三个监听
         /**
          * 准备好播放的时候回调
@@ -365,7 +197,7 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
             public void onPrepared(MediaPlayer mp) {
 
                 //得到視頻的總時長
-                int duration = vv.getDuration();
+                int duration = (int) vv.getDuration();
                 //seekbar的長度
                 seekVideo.setMax(duration);
                 //設置視頻的總時長，需要工具包裝換
@@ -374,7 +206,6 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
                 vv.start();
                 //開始更新播放進度
                 handler.sendEmptyMessage(PROGRESS);
-               // hideMediaController();
             }
         });
         /**
@@ -383,16 +214,7 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
         vv.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
-                Toast.makeText(SystemVideoPlayer.this, "播放出错", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(SystemVideoPlayer.this,VitamioVideoPlayer.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("Infos", videoInfos);
-                intent.putExtras(bundle);
-                intent.putExtra("position",position);
-                intent.setData(uri);
-                startActivity(intent);
-                finish();
-                return true;
+                return false;
             }
         });
         /**
@@ -401,7 +223,7 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
         vv.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                Toast.makeText(SystemVideoPlayer.this, "播放完成", Toast.LENGTH_SHORT).show();
+                Toast.makeText(VitamioVideoPlayer.this, "播放完成", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -444,17 +266,6 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
      * (http://www.buzzingandroid.com/tools/android-layout-finder)
      */
     private void findViews() {
-        //得到屏幕的宽和高
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        screenHeight = metrics.heightPixels;
-        screenWidth = metrics.widthPixels;
-
-        //初始化声音相关
-        am = (AudioManager) getSystemService(AUDIO_SERVICE);
-        currentVoice = am.getStreamVolume(AudioManager.STREAM_MUSIC);
-        maxVoice = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-
         llTop = (LinearLayout)findViewById( R.id.ll_top );
         tvName = (TextView)findViewById( R.id.tv_name );
         ivBattery = (ImageView)findViewById( R.id.iv_battery );
@@ -482,11 +293,6 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
         btnPost.setOnClickListener( this );
         btnNext.setOnClickListener( this );
         btnDefaultScreen.setOnClickListener( this );
-
-        //关联最大音量
-        seekVice.setMax(maxVoice);
-        //设置当前进度
-        seekVice.setProgress(currentVoice);
     }
 
     /**
@@ -495,25 +301,11 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
      * Auto-created on 2017-05-21 18:26:27 by Android Layout Finder
      * (http://www.buzzingandroid.com/tools/android-layout-finder)
      */
-
-    private void updateVoice(boolean isMute) {
-        if(isMute){
-            //静音
-            am.setStreamVolume(AudioManager.STREAM_MUSIC,0,0);
-            seekVice.setProgress(0);
-        }else{
-            //非静音
-            am.setStreamVolume(AudioManager.STREAM_MUSIC,currentVoice,0);
-            seekVice.setProgress(currentVoice);
-        }
-    }
     @Override
     public void onClick(View v) {
         //聲音按鈕
         if ( v == btnVoice ) {
-            isMute = !isMute;
 
-            updateVoice(isMute);
         } else
             //選擇播放視頻按鈕
         if ( v == btnSwitch ) {
@@ -529,7 +321,13 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
         } else
         //暫停播放按鈕
         if ( v == btnPost ) {
-            setStartOrPause();
+            if(vv.isPlaying()){
+                vv.pause();
+                btnPost.setBackgroundResource(R.drawable.btn_start_selector);
+            }else{
+                vv.start();
+                btnPost.setBackgroundResource(R.drawable.btn_post_selector);
+            }
         } else
         //下一個按鈕
         if ( v == btnNext ) {
@@ -540,17 +338,6 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
 
         }
     }
-
-    private void setStartOrPause() {
-        if(vv.isPlaying()){
-            vv.pause();
-            btnPost.setBackgroundResource(R.drawable.btn_start_selector);
-        }else{
-            vv.start();
-            btnPost.setBackgroundResource(R.drawable.btn_post_selector);
-        }
-    }
-
     private void setPreVideo() {
         position--;
         if (position > 0) {
