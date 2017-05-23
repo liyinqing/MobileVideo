@@ -24,7 +24,7 @@ public class LocalVideoAdapter extends BaseAdapter {
     public LocalVideoAdapter(Context context, ArrayList<LocalVideoInfo> lists) {
         this.context =context;
         this.datas = lists;
-        utils = new Utils();
+        utils = new Utils(context);
     }
 
     @Override

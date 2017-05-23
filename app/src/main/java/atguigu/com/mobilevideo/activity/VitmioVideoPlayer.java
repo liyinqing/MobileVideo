@@ -32,13 +32,14 @@ import atguigu.com.mobilevideo.R;
 import atguigu.com.mobilevideo.Utils.Utils;
 import atguigu.com.mobilevideo.domain.LocalVideoInfo;
 import io.vov.vitamio.MediaPlayer;
+import io.vov.vitamio.Vitamio;
 import io.vov.vitamio.widget.VideoView;
 
 public class VitmioVideoPlayer extends AppCompatActivity implements View.OnClickListener {
 
     private static final int SHOW_NET = 3;
     private  final int HIDE_MEDIACONTROLLER =2 ;
-    private VideoView vv;
+    private VideoView  vv;
     private Uri uri;
     private LinearLayout llTop;
     private TextView tvName;
@@ -156,8 +157,9 @@ public class VitmioVideoPlayer extends AppCompatActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_system_video_player);
-        vv = (VideoView)findViewById(R.id.vv);
+        Vitamio.isInitialized(getApplicationContext());
+        setContentView(R.layout.activity_vitamio_video_player);
+        vv = (VideoView) findViewById(R.id.vv);
         findViews();
         //初始化工具包
         getData();

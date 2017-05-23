@@ -597,7 +597,6 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
 
 
         startActivity(intent);
-
         finish();
     }
 

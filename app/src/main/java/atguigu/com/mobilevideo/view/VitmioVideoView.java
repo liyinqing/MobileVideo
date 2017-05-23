@@ -4,12 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 
-/**
- * 作者：杨光福 on 2017/5/20 16:18
- * QQ：541433511
- * 微信：yangguangfu520
- * 作用：
- */
 
 public class VitmioVideoView extends io.vov.vitamio.widget.VideoView {
 
