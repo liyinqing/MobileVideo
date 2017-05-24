@@ -1,5 +1,8 @@
 package atguigu.com.mobilevideo.service;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -15,6 +18,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import atguigu.com.mobilevideo.IMusicPlayService;
+import atguigu.com.mobilevideo.R;
+import atguigu.com.mobilevideo.activity.AudioPlayerActivity;
 import atguigu.com.mobilevideo.domain.LocalVideoInfo;
 
 public class MusicPlayService extends Service {
@@ -96,7 +101,8 @@ public class MusicPlayService extends Service {
     //记录这条的全部信息
     private LocalVideoInfo videoInfo;
     public  final static  String OPENCOMPLETE = "com.atguigu.OPENCOMPLETE";
-
+    //通知管理
+    private NotificationManager nm ;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -208,6 +214,19 @@ public class MusicPlayService extends Service {
      */
     private void start() {
         mediaPlayer.start();
+        nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        Intent intent = new Intent(this, AudioPlayerActivity.class);
+        intent.putExtra("from_notification",true);
+        PendingIntent pi = PendingIntent.getActivity(this,1,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        Notification notifyaction = new Notification.Builder(this)
+                .setSmallIcon(R.drawable.notification_music_playing)
+                .setContentTitle("321音乐")
+                .setContentText("正在播放"+videoInfo.getName())
+                .setContentIntent(pi)
+                .build();
+
+        nm.notify(1,notifyaction);
     }
 
 
@@ -216,6 +235,8 @@ public class MusicPlayService extends Service {
      */
     private void pause() {
         mediaPlayer.pause();
+        //停止时 通知取消
+        nm.cancel(1);
     }
     /**
      * +     * 得到演唱者
@@ -290,4 +311,5 @@ public class MusicPlayService extends Service {
     private void pre() {
 
     }
+
 }

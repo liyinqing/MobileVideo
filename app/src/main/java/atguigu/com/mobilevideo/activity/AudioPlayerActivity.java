@@ -46,6 +46,8 @@ public class AudioPlayerActivity extends AppCompatActivity implements View.OnCli
     private MyReceiver receiver;
     private TextView tv_time;
     private Utils utils;
+    //判断来自哪里的意图
+    private boolean from_notification;
     //服务连接
     private ServiceConnection conn = new ServiceConnection() {
         /**
@@ -58,8 +60,12 @@ public class AudioPlayerActivity extends AppCompatActivity implements View.OnCli
             service = IMusicPlayService.Stub.asInterface(iBinder);
 
             try {
-                if(service != null) {
-                    service.openAudio(position);
+                if(from_notification){
+                        setViewData();
+                }else {
+                    if (service != null) {
+                        service.openAudio(position);
+                    }
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -143,7 +149,9 @@ public class AudioPlayerActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         if ( v == btnNormal ) {
-            // Handle clicks for btnNormal
+
+
+
         } else if ( v == btnPrevious ) {
             // Handle clicks for btnPrevious
         } else if ( v == btnPost ) {
@@ -215,6 +223,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements View.OnCli
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
+                    handler.removeMessages(PROGRESS);
                     handler.sendEmptyMessageDelayed(PROGRESS,1000);
 
                     break;
@@ -252,7 +261,11 @@ public class AudioPlayerActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void getDate() {
-        position = getIntent().getIntExtra("position", 0);
+        from_notification = getIntent().getBooleanExtra("from_notification", false);
+        if(!from_notification){
+            position = getIntent().getIntExtra("position", 0);
+        }
+
     }
 
     private void startAndBindService() {

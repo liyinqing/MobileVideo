@@ -106,6 +106,7 @@ public class LocalAudioPaper extends BaseFragment implements AdapterView.OnItemC
         //自定义播放器
         Intent intent = new Intent(context,AudioPlayerActivity.class);
         intent.putExtra("position",position);
+        intent.putExtra("from_notification",false);
         startActivity(intent);
     }
 }
