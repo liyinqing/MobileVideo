@@ -117,39 +117,35 @@
         </LinearLayout>
 
         <LinearLayout
+            android:gravity="center"
             android:background="@drawable/bg_player_bottom_control"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <Button
-                android:layout_weight="1"
                 android:background="@drawable/btn_exit_selector"
                 android:id="@+id/btn_exit"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <Button
-                android:layout_weight="1"
                 android:background="@drawable/btn_previous_selector"
                 android:id="@+id/btn_previous"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <Button
-                android:layout_weight="1"
                 android:background="@drawable/btn_post_selector"
                 android:id="@+id/btn_post"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content" />
+                android:layout_width="80dp"
+                android:layout_height="80dp" />
             <Button
-                android:layout_weight="1"
                 android:background="@drawable/btn_next_selector"
                 android:id="@+id/btn_next"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <Button
-                android:layout_weight="1"
                 android:background="@drawable/btn_default_screen_selector"
                 android:id="@+id/btn_default_screen"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>

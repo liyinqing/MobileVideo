@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_audio_player"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/base_bg"
+    tools:context="atguigu.com.mobilevideo.activity.AudioPlayerActivity">
+
+    <RelativeLayout
+        android:id="@+id/rl_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/iv_incon"
+            android:src="@drawable/now_playing_matrix_01"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_artist"
+            android:textColor="#ffffff"
+            android:layout_marginTop="50dp"
+            android:layout_centerHorizontal="true"
+            android:text="王杰"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_audioName"
+            android:textSize="20dp"
+            android:textColor="#ffffff"
+            android:layout_marginTop="80dp"
+            android:layout_centerHorizontal="true"
+            android:text="我是真的爱上你"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:id="@+id/ll_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_marginRight="8dp"
+            android:textColor="#ffffff"
+            android:gravity="right"
+            android:text="00:10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <SeekBar
+            android:id="@+id/seek_audio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxHeight="5dp"
+            android:minHeight="5dp"
+            android:progressDrawable="@drawable/seek_audio_progressbar_horizontal"
+            android:thumb="@drawable/seek_thumb" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_weight="1"
+                android:background="@drawable/btn_now_playing_normal_selector"
+                android:id="@+id/btn_normal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+            <Button
+                android:layout_weight="1"
+                android:background="@drawable/btn_audio_previous_selector"
+                android:id="@+id/btn_previous"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+            <Button
+                android:layout_weight="1"
+                android:background="@drawable/btn_audio_post_selector"
+                android:id="@+id/btn_post"
+                android:layout_width="0dp"
+                android:layout_height="80dp" />
+            <Button
+                android:layout_weight="1"
+                android:background="@drawable/btn_audio_next_selector"
+                android:id="@+id/btn_next"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+            <Button
+                android:layout_weight="1"
+                android:background="@drawable/btn_lyrics_selector"
+                android:id="@+id/btn_lyrics"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

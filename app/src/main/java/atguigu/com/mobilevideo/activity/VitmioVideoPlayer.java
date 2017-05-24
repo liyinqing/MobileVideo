@@ -166,6 +166,7 @@ public class VitmioVideoPlayer extends AppCompatActivity implements View.OnClick
         setPlay();
         listener();
         registePlayer();
+        setButtonStatus();
 
     }
 
@@ -549,6 +550,7 @@ public class VitmioVideoPlayer extends AppCompatActivity implements View.OnClick
             updateVoice(isMute);
         } else
             //選擇播放視頻按鈕
+
         if ( v == btnSwitch ) {
                 new AlertDialog.Builder(this)
                             .setTitle("提示")
@@ -564,7 +566,7 @@ public class VitmioVideoPlayer extends AppCompatActivity implements View.OnClick
         } else
             //返回退出按鈕
         if ( v == btnExit ) {
-
+            finish();
         } else
             //上一個按鈕
         if ( v == btnPrevious ) {
@@ -576,11 +578,23 @@ public class VitmioVideoPlayer extends AppCompatActivity implements View.OnClick
         } else
         //下一個按鈕
         if ( v == btnNext ) {
-
+            setNextVideo();
         } else
         //切換全屏按鈕
         if ( v == btnDefaultScreen ) {
 
+        }
+    }
+
+    private void setNextVideo() {
+        position++;
+        if (position > 0) {
+            //还是在列表范围内容
+            LocalVideoInfo videoInfo = videoInfos.get(position);
+            vv.setVideoPath(videoInfo.getData());
+            tvName.setText(videoInfo.getName());
+            //设置按钮状态
+            setButtonStatus();
         }
     }
 

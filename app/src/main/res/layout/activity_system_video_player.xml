@@ -12,23 +12,49 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
-    <include layout="@layout/madia_controller"/>
+
+    <include layout="@layout/madia_controller" />
+
 
     <LinearLayout
-        android:id="@+id/ll_buffer"
-        android:visibility="gone"
-        android:gravity="center"
-        android:layout_centerInParent="true"
+        android:id="@+id/ll_loging"
         android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:gravity="center"
+        android:background="@drawable/bg_player_loading_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
         <ProgressBar
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_loging_net"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正在加载...5kb/s"
+            android:textColor="#ffffff" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_buffer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
         <TextView
             android:id="@+id/tv_net"
-            android:text="正在加载...5kb/s"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="正在加载...5kb/s"
+            android:textColor="#ffffff" />
     </LinearLayout>
 </RelativeLayout>

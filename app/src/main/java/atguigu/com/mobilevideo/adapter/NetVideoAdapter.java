@@ -7,27 +7,28 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.xutils.image.ImageOptions;
-import org.xutils.x;
+import com.squareup.picasso.Picasso;
 
-import java.util.List;
+import org.xutils.image.ImageOptions;
+
+import java.util.ArrayList;
 
 import atguigu.com.mobilevideo.R;
 import atguigu.com.mobilevideo.Utils.Utils;
-import atguigu.com.mobilevideo.domain.MoveInfo;
+import atguigu.com.mobilevideo.domain.LocalVideoInfo;
 
 /**
  * 作者：李银庆 on 2017/5/21 14:11
  */
 public class NetVideoAdapter extends BaseAdapter {
     private final Context context;
-    private final List<MoveInfo.TrailersBean> datas;
+    private final ArrayList<LocalVideoInfo> datas;
     private Utils utils;
     ImageOptions imageOptions;
 
-    public NetVideoAdapter(Context context, List<MoveInfo.TrailersBean> lists) {
+    public NetVideoAdapter(Context context, ArrayList<LocalVideoInfo> videoInfos) {
         this.context =context;
-        this.datas = lists;
+        this.datas = videoInfos;
         utils = new Utils(context);
         imageOptions = new ImageOptions.Builder()
                 .setIgnoreGif(false)
@@ -43,7 +44,7 @@ public class NetVideoAdapter extends BaseAdapter {
     }
 
     @Override
-    public MoveInfo.TrailersBean getItem(int position) {
+    public LocalVideoInfo getItem(int position) {
         return datas.get(position);
     }
 
@@ -67,14 +68,17 @@ public class NetVideoAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        MoveInfo.TrailersBean localVideoInfo = datas.get(position);
-        viewHolder.tv_name.setText(localVideoInfo.getMovieName());
+        LocalVideoInfo localVideoInfo = datas.get(position);
+        viewHolder.tv_name.setText(localVideoInfo.getName());
         //时长都是毫秒，需要转换 大小也要转换成兆 需要工具类
-        viewHolder.tv_duration.setText(localVideoInfo.getVideoTitle());
-        viewHolder.tv_size.setText(localVideoInfo.getVideoLength()+"秒");
+        viewHolder.tv_duration.setText(localVideoInfo.getDuration1());
+        viewHolder.tv_size.setText(localVideoInfo.getSize()+"秒");
 
-        x.image().bind(viewHolder.iv_icon,localVideoInfo.getCoverImg(),imageOptions);
-
+        //x.image().bind(viewHolder.iv_icon,localVideoInfo.getCoverImg(),imageOptions);
+        Picasso.with(context)
+                .load(localVideoInfo.getCoverImg())
+                .placeholder(R.drawable.video_default)
+                .into(viewHolder.iv_icon);
         return convertView;
 
     }

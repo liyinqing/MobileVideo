@@ -4,12 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 
-/**
- * 作者：杨光福 on 2017/5/20 16:18
- * QQ：541433511
- * 微信：yangguangfu520
- * 作用：
- */
 
 public class VideoView extends android.widget.VideoView {
 
@@ -36,6 +30,7 @@ public class VideoView extends android.widget.VideoView {
      * @param height
      */
     public void setVideoSize(int width,int height){
+        //getLayoutParams()获得布局参数 。
         ViewGroup.LayoutParams l = getLayoutParams();
         l.width = width;
         l.height = height;

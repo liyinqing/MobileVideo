@@ -3,18 +3,18 @@
     package="atguigu.com.mobilevideo">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:name=".app.MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -29,28 +29,34 @@
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTask" />
-        <!--android:screenOrientation="landscape"-->
-        <activity android:name=".activity.SystemVideoPlayer"
-            android:theme="@style/MyScreen"
+        <!-- android:screenOrientation="landscape" -->
+        <activity
+            android:name=".activity.SystemVideoPlayer"
             android:label="@string/plyaer_name"
-            >
-
+            android:screenOrientation="landscape"
+            android:theme="@style/MyScreen">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="rtsp" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="video/*" />
                 <data android:mimeType="application/sdp" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="http" />
                 <data android:mimeType="video/mpeg4" />
                 <data android:mimeType="video/mp4" />
@@ -58,7 +64,6 @@
                 <data android:mimeType="video/3gpp" />
                 <data android:mimeType="video/3gpp2" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -275,11 +280,19 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".activity.VitmioVideoPlayer"
+        <activity
+            android:name=".activity.VitmioVideoPlayer"
+            android:label="@string/plyaer_name"
             android:launchMode="singleTask"
-            android:theme="@style/MyScreen"
-            android:label="@string/plyaer_name"/>
+            android:screenOrientation="landscape"
+            android:theme="@style/noAnimation_Theme" />
+        <activity android:name=".activity.AudioPlayerActivity" />
+
+        <service android:name=".service.MusicPlayService">
+            <intent-filter>
+                <action android:name="atguigu.com.mobilevideo.service.MUSICPLAYSERVICE" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

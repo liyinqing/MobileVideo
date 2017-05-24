@@ -5,6 +5,7 @@ import android.text.format.Formatter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -19,13 +20,17 @@ import atguigu.com.mobilevideo.domain.LocalVideoInfo;
 public class LocalVideoAdapter extends BaseAdapter {
     private final Context context;
     private final ArrayList<LocalVideoInfo> datas;
+    private final boolean isVideo;
     private Utils utils;
 
-    public LocalVideoAdapter(Context context, ArrayList<LocalVideoInfo> lists) {
+    public LocalVideoAdapter(Context context, ArrayList<LocalVideoInfo> lists,boolean b) {
         this.context =context;
         this.datas = lists;
+        this.isVideo = b;
         utils = new Utils(context);
     }
+
+
 
     @Override
     public int getCount() {
@@ -49,6 +54,7 @@ public class LocalVideoAdapter extends BaseAdapter {
             convertView = View.inflate(context, R.layout.item_video,null);
             viewHolder = new ViewHolder();
             viewHolder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
+            viewHolder.iv_icon = (ImageView) convertView.findViewById(R.id.iv_icon);
             viewHolder.tv_duration = (TextView) convertView.findViewById(R.id.tv_duration);
             viewHolder.tv_size = (TextView) convertView.findViewById(R.id.tv_size);
             convertView.setTag(viewHolder);
@@ -60,9 +66,14 @@ public class LocalVideoAdapter extends BaseAdapter {
         //时长都是毫秒，需要转换 大小也要转换成兆 需要工具类
         viewHolder.tv_duration.setText(utils.stringForTime((int) localVideoInfo.getDuration()));
         viewHolder.tv_size.setText(Formatter.formatFileSize(context,localVideoInfo.getSize()));
+        if(!isVideo){
+            viewHolder.iv_icon.setImageResource(R.drawable.music_default_bg);
+        }
+
         return convertView;
     }
     static class ViewHolder{
+        ImageView iv_icon;
         TextView tv_name;
         TextView tv_duration;
         TextView tv_size;

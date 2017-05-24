@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -42,7 +43,8 @@ public class LocalVideoPaper extends BaseFragment implements AdapterView.OnItemC
                     if(lists != null && lists.size()>0){
                         tv_content.setVisibility(View.GONE);
                         //显示数据
-                        adapter = new LocalVideoAdapter(context,lists);
+                        adapter = new LocalVideoAdapter(context,lists,true);
+                        Log.e("TAG",lists+"-----------------------------");
                         lv.setAdapter(adapter);
                     }else{
                         tv_content.setVisibility(View.VISIBLE);
@@ -56,8 +58,8 @@ public class LocalVideoPaper extends BaseFragment implements AdapterView.OnItemC
 //        tv = new TextView(context);
 //        return tv;
         view = View.inflate(context, R.layout.local_video,null);
-        lv = (ListView) view.findViewById(R.id.lv);
-        tv_content = (TextView) view.findViewById(R.id.tv_content);
+        lv = (ListView) view.findViewById(R.id.lv2);
+        tv_content = (TextView) view.findViewById(R.id.tv_content2);
 
         //点击lv实现播放
         lv.setOnItemClickListener(this);
@@ -80,7 +82,9 @@ public class LocalVideoPaper extends BaseFragment implements AdapterView.OnItemC
                 lists = new ArrayList<LocalVideoInfo>();
                 ContentResolver resolver = context.getContentResolver();
                 //得到外部视频存储的Uri
+
                 Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+//                Uri uri = MediaStore.Video.Media.INTERNAL_CONTENT_URI;
                 //得到相应列的数据
                 String[] pros ={
                         MediaStore.Video.Media.DISPLAY_NAME,//视频姓名
@@ -95,6 +99,7 @@ public class LocalVideoPaper extends BaseFragment implements AdapterView.OnItemC
                         long duration = cursor.getLong(cursor.getColumnIndex( MediaStore.Video.Media.DURATION));
                         long size = cursor.getLong(cursor.getColumnIndex( MediaStore.Video.Media.SIZE));
                         String data = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
+                        Log.e("TAG","name-----"+name +"duration----"+duration+"size----"+size+"data---"+data);
                         lists.add(new LocalVideoInfo(name,duration,size,data));
                     }
                     cursor.close();
