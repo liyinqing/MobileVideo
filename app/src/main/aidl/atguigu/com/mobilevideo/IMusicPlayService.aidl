@@ -112,4 +112,9 @@ interface IMusicPlayService {
                  * 是否联网
                  */
                  boolean isPlayer();
+
+                  int getPlayermode();
+
+                  void setPlayermode(int playermode);
+
 }

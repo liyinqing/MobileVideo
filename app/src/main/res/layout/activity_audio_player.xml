@@ -78,6 +78,7 @@
                 android:id="@+id/btn_previous"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" />
+
             <Button
                 android:layout_weight="1"
                 android:background="@drawable/btn_audio_post_selector"
@@ -99,4 +100,11 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <atguigu.com.mobilevideo.view.LyricView
+        android:layout_below="@id/rl_top"
+        android:layout_above="@id/ll_bottom"
+        android:id="@+id/lyricView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </RelativeLayout>

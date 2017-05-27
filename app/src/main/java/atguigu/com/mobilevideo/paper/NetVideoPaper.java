@@ -165,11 +165,9 @@ public class NetVideoPaper extends BaseFragment {
                    String coverImg = jsonObject1.getString("coverImg");
                    videoInfos1.add(new LocalVideoInfo(movieName,videoTitle,videoLength,url,coverImg));
                }
-               Log.e("TAG","videoInfos1111111111111============="+videoInfos);
                if(videoInfos1 != null && videoInfos1.size()>0) {
 
                    videoInfos.addAll(videoInfos1);
-                   Log.e("TAG", "videoInfos22222222222222=============" + videoInfos);
                    adapter.notifyDataSetChanged();
                }
            } catch (Exception e) {

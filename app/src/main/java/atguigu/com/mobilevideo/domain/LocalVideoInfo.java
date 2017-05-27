@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class LocalVideoInfo implements Serializable {
     private String coverImg;
-    private  String duration1;
+    private  String videoTitle;
     private String name;
     private long duration;
     private long size;
@@ -46,16 +46,16 @@ public class LocalVideoInfo implements Serializable {
     }
 
     public String getDuration1() {
-        return duration1;
+        return videoTitle;
     }
 
-    public void setDuration1(String duration1) {
-        this.duration1 = duration1;
+    public void setDuration1(String videoTitle) {
+        this.videoTitle = videoTitle;
     }
 
-    public LocalVideoInfo(String name, String duration1, long videolength, String url, String coverImg) {
+    public LocalVideoInfo(String name, String videoTitle, long videolength, String url, String coverImg) {
         this.name = name;
-        this.duration1 = duration1;
+        this.videoTitle = videoTitle;
         this.size =  videolength;
         this.data = url;
         this.coverImg = coverImg;
