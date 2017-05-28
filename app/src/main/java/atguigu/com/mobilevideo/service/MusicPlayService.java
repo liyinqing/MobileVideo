@@ -90,6 +90,11 @@ public class MusicPlayService extends Service {
             service.setPlayermode(playermode);
         }
 
+        @Override
+        public int getAudioSessionId() throws RemoteException {
+            return mediaPlayer.getAudioSessionId();
+        }
+
 
     };
 
@@ -158,7 +163,10 @@ public class MusicPlayService extends Service {
                         long size = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
                         String data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
                         String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-                        lists.add(new LocalVideoInfo(name, duration, size, data,artist));
+                        if(size > 3*1024) {
+                            lists.add(new LocalVideoInfo(name, duration, size, data, artist));
+
+                        }
                     }
                 }
                 cursor.close();

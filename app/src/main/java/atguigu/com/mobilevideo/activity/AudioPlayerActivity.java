@@ -5,13 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.AnimationDrawable;
+import android.media.audiofx.Visualizer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -35,6 +35,7 @@ import atguigu.com.mobilevideo.Utils.Utils;
 import atguigu.com.mobilevideo.domain.LocalVideoInfo;
 import atguigu.com.mobilevideo.domain.Lyric;
 import atguigu.com.mobilevideo.service.MusicPlayService;
+import atguigu.com.mobilevideo.view.BaseVisualizerView;
 import atguigu.com.mobilevideo.view.LyricView;
 
 import static atguigu.com.mobilevideo.R.id.iv_incon;
@@ -60,6 +61,9 @@ public class AudioPlayerActivity extends AppCompatActivity implements View.OnCli
     private boolean from_notification;
 
     private LyricView lyricView;
+    private Visualizer mVisualizer;
+
+    private BaseVisualizerView visualizerView;
 
     //服务连接
     private ServiceConnection conn = new ServiceConnection() {
@@ -122,7 +126,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements View.OnCli
         btnPost = (Button) findViewById(R.id.btn_post);
         btnNext = (Button) findViewById(R.id.btn_next);
         btnLyrics = (Button) findViewById(R.id.btn_lyrics);
-
+        visualizerView = (BaseVisualizerView)findViewById(R.id.visualizerView);
         lyricView = (LyricView) findViewById(R.id.lyricView);
 
         btnNormal.setOnClickListener(this);
@@ -318,20 +322,16 @@ public class AudioPlayerActivity extends AppCompatActivity implements View.OnCli
             setButtonImage();
 
             String audioPath = service.getAudioPath();
-            Log.e("TAG","====================================="+audioPath);
             String substring = audioPath.substring(0, audioPath.lastIndexOf("."));
             File file = new File(substring + ".lrc");
-            Log.e("TAG","====================================="+file);
             if (!file.exists()) {
                 file = new File(substring + ".txt");
-                Log.e("TAG","====================================="+file);
             }
             LyricUtils lyricUtils = new LyricUtils();
             lyricUtils.readFile(file);
 
             ArrayList<Lyric> lyrics = lyricUtils.getLyrics();
             for(int i = 0; i < lyrics.size(); i++) {
-                Log.e("name","============"+lyrics.get(i).toString());
             }
             lyricView.setLyrics(lyrics);
 
@@ -344,8 +344,36 @@ public class AudioPlayerActivity extends AppCompatActivity implements View.OnCli
         }
         handler.sendEmptyMessage(PROGRESS);
 
+        setupVisualizerFxAndUi();
+    }
+    /**
+     * 生成一个VisualizerView对象，使音频频谱的波段能够反映到 VisualizerView上
+     */
+    private void setupVisualizerFxAndUi()
+    {
+
+        int audioSessionid = 0;
+        try {
+            audioSessionid = service.getAudioSessionId();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        System.out.println("audioSessionid=="+audioSessionid);
+        mVisualizer = new Visualizer(audioSessionid);
+        // 参数内必须是2的位数
+        mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+        // 设置允许波形表示，并且捕获它
+        visualizerView.setVisualizer(mVisualizer);
+        mVisualizer.setEnabled(true);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (isFinishing()) {
+            mVisualizer.release();
+        }
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

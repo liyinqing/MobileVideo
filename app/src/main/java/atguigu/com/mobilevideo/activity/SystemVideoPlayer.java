@@ -322,7 +322,6 @@ public class SystemVideoPlayer extends AppCompatActivity implements View.OnClick
                     case MotionEvent.ACTION_DOWN:
                         startX = event.getX();
                         startY = event.getY();
-
                         //1.记录相关参数
                         //dowY = event.getY();
                         mVol = am.getStreamVolume(AudioManager.STREAM_MUSIC);

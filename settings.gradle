@@ -1,1 +1,2 @@
-include ':app', ':Start', ':vitamio-sample', ':vitamio'
+include ':app', ':Start', ':vitamio', ':PhotoView_library'
+

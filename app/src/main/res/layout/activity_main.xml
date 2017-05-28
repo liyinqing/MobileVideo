@@ -27,18 +27,21 @@
         android:text="本地视频"
         style="@style/butoom"
         />
+
         <RadioButton
             android:id="@+id/rb_local_audio"
             android:drawableTop="@drawable/rb_local_audio_icon"
             android:text="本地音乐"
             style="@style/butoom"
             />
+
         <RadioButton
             android:id="@+id/rb_net_audio"
             android:drawableTop="@drawable/rb_net_audio_icon"
             android:text="网络音乐"
             style="@style/butoom"
             />
+
         <RadioButton
             android:id="@+id/rb_net_video"
             android:drawableTop="@drawable/rb_net_video_icon"
@@ -46,6 +49,12 @@
             style="@style/butoom"
             />
 
+        <RadioButton
+            android:id="@+id/rb_net_recycler"
+            android:drawableTop="@drawable/rb_net_recycler_icon"
+            android:text="Recycler"
+            style="@style/butoom"
+            />
 
     </RadioGroup>
 </LinearLayout>

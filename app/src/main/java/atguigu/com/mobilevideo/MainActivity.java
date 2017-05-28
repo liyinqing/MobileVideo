@@ -3,6 +3,8 @@ package atguigu.com.mobilevideo;
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,6 +20,8 @@ import atguigu.com.mobilevideo.paper.LocalAudioPaper;
 import atguigu.com.mobilevideo.paper.LocalVideoPaper;
 import atguigu.com.mobilevideo.paper.NetAudioPaper;
 import atguigu.com.mobilevideo.paper.NetVideoPaper;
+import atguigu.com.mobilevideo.paper.RecyclerPaper;
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 
 public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
 
@@ -28,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     private int position;
     //优化每个Fragment执行都执行一边生命周期方法,布局加载一次，消耗性能，创建缓存
     private Fragment tempFragment;
+    SensorManager sensorManager;
+    JCVideoPlayer.JCAutoFullscreenListener sensorEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +45,30 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         initData();
         rg_main.setOnCheckedChangeListener(this);
         rg_main.check(R.id.rb_local_video);
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorEventListener = new JCVideoPlayer.JCAutoFullscreenListener();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(sensorEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(sensorEventListener);
+        JCVideoPlayer.releaseAllVideos();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (JCVideoPlayer.backPress()) {
+            return;
+        }
+        super.onBackPressed();
     }
 
     /**
@@ -67,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         fragments.add(new LocalAudioPaper());
         fragments.add(new NetAudioPaper());
         fragments.add(new NetVideoPaper());
+        fragments.add(new RecyclerPaper());
     }
 
     @Override
@@ -83,6 +114,9 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                 break;
             case R.id.rb_net_video:
                 position = 3;
+                break;
+            case R.id.rb_net_recycler:
+                position = 4;
                 break;
         }
         BaseFragment baseFragment = fragments.get(position);

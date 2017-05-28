@@ -12,11 +12,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
+            android:visibility="gone"
             android:id="@+id/iv_incon"
             android:src="@drawable/now_playing_matrix_01"
             android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <atguigu.com.mobilevideo.view.BaseVisualizerView
+            android:id="@+id/visualizerView"
+            android:layout_centerHorizontal="true"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            />
         <TextView
             android:id="@+id/tv_artist"
             android:textColor="#ffffff"
